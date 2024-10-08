@@ -1,5 +1,6 @@
 import { Job } from "../models/job.model.js";
 
+// admin
 export const postJob = async (req, res) => {
      try {
           const { title, description, requirements, salary, experience, location, jobType, position, companyId } = req.body;
@@ -37,6 +38,7 @@ export const postJob = async (req, res) => {
      };
 };
 
+// student
 export const getAllJobs = async (req, res) => {
      try {
           const keywords = req.query.keyword | "";
@@ -67,6 +69,7 @@ export const getAllJobs = async (req, res) => {
      };
 };
 
+// student
 export const getJobById = async (req, res) => {
      try {
           const jobId = req.params.id;
@@ -81,6 +84,30 @@ export const getJobById = async (req, res) => {
 
           return res.status(200).json({
                job,
+               success: true
+          });
+
+
+     } catch (error) {
+          console.log(error)
+     }
+};
+
+// admin
+export const getAdminJobs = async (req, res) => {
+     try {
+          const adminId = req.id;
+          const jobs = await Jobs.find({ created_by: adminId })
+
+          if (!jobs) {
+               res.status(404).json({
+                    message: "Jobs not found!",
+                    success: false
+               });
+          };
+
+          return res.status(200).json({
+               jobs,
                success: true
           });
 
