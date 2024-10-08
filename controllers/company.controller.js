@@ -81,7 +81,7 @@ export const updateCompanyDetails = async (req, res) => {
 
           const updateData = { name, description, website, location };
 
-          const company = await Company.findOneAndUpdate(req.params.id, updateData, { new: true });
+          const company = await Company.findByIdAndUpdate(req.params.id, updateData, { new: true });
 
           if (!company) {
                res.status(404).json({
