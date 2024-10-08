@@ -41,29 +41,26 @@ export const postJob = async (req, res) => {
 // student
 export const getAllJobs = async (req, res) => {
      try {
-          const keywords = req.query.keyword | "";
-
+          const keyword = req.query.keyword || "";
           const query = {
                $or: [
-                    { titel: { $regex: keyword, $options: "i" } },
+                    { title: { $regex: keyword, $options: "i" } },
                     { description: { $regex: keyword, $options: "i" } },
                ]
           };
-
-          const jobs = await Job.find(query);
-
+          const jobs = await Job.find(query).populate({
+               path: "company"
+          }).sort({ createdAt: -1 });
           if (!jobs) {
-               res.status(404).json({
+               return res.status(404).json({
                     message: "Jobs not found!",
                     success: false
                });
           };
-
           return res.status(200).json({
                jobs,
                success: true
           });
-
      } catch (error) {
           console.log(error);
      };
@@ -97,7 +94,7 @@ export const getJobById = async (req, res) => {
 export const getAdminJobs = async (req, res) => {
      try {
           const adminId = req.id;
-          const jobs = await Jobs.find({ created_by: adminId })
+          const jobs = await Job.find({ created_by: adminId })
 
           if (!jobs) {
                res.status(404).json({
@@ -110,7 +107,6 @@ export const getAdminJobs = async (req, res) => {
                jobs,
                success: true
           });
-
 
      } catch (error) {
           console.log(error)
