@@ -32,7 +32,7 @@ export const applyJob = async (req, res) => {
           const job = await Job.findById(jobId);
 
           if (!job) {
-               return res.status(400).json({
+               return res.status(404).json({
                     message: "Job not found!",
                     success: false,
                });
@@ -42,7 +42,7 @@ export const applyJob = async (req, res) => {
 
           const newApplication = await Application.create({
                job: jobId,
-               application: userId,
+               applicant: userId,
           });
 
           job.applications.push(newApplication._id);
@@ -69,7 +69,7 @@ export const getAppliedJobs = async (req, res) => {
                     options: { sort: { createdAt: -1 } },
                     populate: {
                          path: "company",
-                         option: { sort: { createdAt: -1 } },
+                         options: { sort: { createdAt: -1 } },
                     },
                });
 
